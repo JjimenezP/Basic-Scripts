@@ -1,0 +1,34 @@
+#Jhon Jimenez Peña
+#sunabouzo@hotmail.es
+form Crear TextGrid
+	sentence Directorio C:\Users\user\Desktop\SOUND
+	sentence Tier Segmento Palabra Glosa
+endform
+id_Strings= Create Strings as file list: "fileList", "'directorio$'\*.wav"
+nStrings= Get number of strings
+for iStrings to nStrings
+	nombre_de_Sound$= Get string: iStrings
+	ruta_completa_Sound$= directorio$+"\"+nombre_de_Sound$
+	id_Sound= Read from file: ruta_completa_Sound$
+	etiqueta_Sound$= selected$("Sound")
+	ruta_completa_TextGrid$= directorio$+"\"+etiqueta_Sound$+".TextGrid"
+		if fileReadable (ruta_completa_TextGrid$)
+			id_TextGrid = Read from file: ruta_completa_TextGrid$
+		else
+			id_TextGrid= To TextGrid: "'Tier$'", ""
+		endif
+	plusObject: id_Sound
+	View & Edit
+		editor TextGrid 'etiqueta_Sound$'
+		Show analyses: "yes", "no", "no", "no", "no", 10
+		pauseScript: "¡Oye!, segmenta"
+		endeditor
+	minus id_Sound
+	Save as text file: directorio$+"\"+etiqueta_Sound$+".TextGrid"
+	select all
+	minus id_Strings
+	Remove
+endfor
+selectObject: id_Strings
+Remove
+writeInfoLine: "se crearon 'nStrings' TextGrids los cuales corresponden al número de audios. :)"
